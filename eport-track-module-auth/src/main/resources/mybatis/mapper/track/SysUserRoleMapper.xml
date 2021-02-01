@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njeport.track.auth.dao.mapper.track.SysUserRoleMapper" >
+    <resultMap id="BaseResult" type="com.njeport.track.auth.dao.meta.track.SysUserRoleDO" >
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="role_id" property="roleId" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="TableName">
+        sys_user_role
+    </sql>
+
+    <sql id="BaseColumn" >
+        `user_id`,
+        `role_id`
+    </sql>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="false">
+        INSERT INTO
+          <include refid="TableName" /> (id, <include refid="BaseColumn" />)
+        VALUES(
+          #{id,jdbcType=VARCHAR},
+          #{userId,jdbcType=VARCHAR},
+          #{roleId,jdbcType=VARCHAR}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE
+          <include refid="TableName"/>
+        <set>
+            <if test="userId != null" >
+              `user_id` = #{userId},
+            </if>
+            <if test="roleId != null" >
+              `role_id` = #{roleId},
+            </if>
+        </set>
+        WHERE
+          `id` = #{id}
+    </update>
+
+    <select id="getById" resultMap="BaseResult">
+        SELECT
+          id, <include refid="BaseColumn" />
+        FROM
+          <include refid="TableName"/>
+        WHERE
+          `id` = #{id}
+    </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+          <include refid="TableName"/>
+        WHERE
+          `id` = #{id}
+    </delete>
+
+    <delete id="deleteByUserId">
+        DELETE
+        FROM
+        <include refid="TableName"/>
+        WHERE
+        `user_id` = #{userId}
+    </delete>
+</mapper>

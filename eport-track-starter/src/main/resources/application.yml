@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: eport-track
+  profiles:
+    active: test
+
+logging:
+  config: classpath:log4j2.xml
+
+captcha:
+  scope:  123456789
+  length: 4
+  expire: 1800
+
+server:
+  servlet:
+    context-path: /api

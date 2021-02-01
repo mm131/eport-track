@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njeport.track.auth.dao.mapper.track.SysDepartMapper" >
+    <resultMap id="BaseResult" type="com.njeport.track.auth.dao.meta.track.SysDepartDO" >
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="VARCHAR"/>
+        <result column="depart_name" property="departName" jdbcType="VARCHAR"/>
+        <result column="depart_name_en" property="departNameEn" jdbcType="VARCHAR"/>
+        <result column="depart_name_abbr" property="departNameAbbr" jdbcType="VARCHAR"/>
+        <result column="depart_order" property="departOrder" jdbcType="INTEGER"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="org_category" property="orgCategory" jdbcType="VARCHAR"/>
+        <result column="org_type" property="orgType" jdbcType="VARCHAR"/>
+        <result column="org_code" property="orgCode" jdbcType="VARCHAR"/>
+        <result column="mobile" property="mobile" jdbcType="VARCHAR"/>
+        <result column="fax" property="fax" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="memo" property="memo" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="del_flag" property="delFlag" jdbcType="INTEGER"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="TableName">
+        sys_depart
+    </sql>
+
+    <sql id="BaseColumn" >
+        `parent_id`,
+        `depart_name`,
+        `depart_name_en`,
+        `depart_name_abbr`,
+        `depart_order`,
+        `description`,
+        `org_category`,
+        `org_type`,
+        `org_code`,
+        `mobile`,
+        `fax`,
+        `address`,
+        `memo`,
+        `status`,
+        `del_flag`,
+        `create_by`,
+        `create_time`,
+        `update_by`,
+        `update_time`
+    </sql>
+
+    <sql id="queryByCondition">
+        <if test="params.delFlag!=null">
+            and del_flag=#{params.delFlag}
+        </if>
+    </sql>
+
+    <select id="getDepartList" resultMap="BaseResult">
+        select * from
+        <include refid="TableName"/>
+        where
+        1=1
+        <include refid="queryByCondition" />
+        <if test="params.column!=null and params.column!=''">
+            order by ${params.column}
+        </if>
+        <if test="params.order!=null and params.order!=''">
+            ${params.order}
+        </if>
+    </select>
+
+    <select id="queryCompanyByOrgCode" resultMap="BaseResult">
+        select * from
+        <include refid="TableName"/>
+        where
+        1=1
+        and org_code=#{orgCode}
+
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="false">
+        INSERT INTO
+          <include refid="TableName" /> (id, <include refid="BaseColumn" />)
+        VALUES(
+          #{id,jdbcType=VARCHAR},
+          #{parentId,jdbcType=VARCHAR},
+          #{departName,jdbcType=VARCHAR},
+          #{departNameEn,jdbcType=VARCHAR},
+          #{departNameAbbr,jdbcType=VARCHAR},
+          #{departOrder,jdbcType=INTEGER},
+          #{description,jdbcType=VARCHAR},
+          #{orgCategory,jdbcType=VARCHAR},
+          #{orgType,jdbcType=VARCHAR},
+          #{orgCode,jdbcType=VARCHAR},
+          #{mobile,jdbcType=VARCHAR},
+          #{fax,jdbcType=VARCHAR},
+          #{address,jdbcType=VARCHAR},
+          #{memo,jdbcType=VARCHAR},
+          #{status,jdbcType=INTEGER},
+          0,
+          #{createBy,jdbcType=VARCHAR},
+          NOW(),
+          #{updateBy,jdbcType=VARCHAR},
+          NOW()
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE
+          <include refid="TableName"/>
+        <set>
+            <if test="parentId != null" >
+              `parent_id` = #{parentId},
+            </if>
+            <if test="departName != null" >
+              `depart_name` = #{departName},
+            </if>
+            <if test="departNameEn != null" >
+              `depart_name_en` = #{departNameEn},
+            </if>
+            <if test="departNameAbbr != null" >
+              `depart_name_abbr` = #{departNameAbbr},
+            </if>
+            <if test="departOrder != null" >
+              `depart_order` = #{departOrder},
+            </if>
+            <if test="description != null" >
+              `description` = #{description},
+            </if>
+            <if test="orgCategory != null" >
+              `org_category` = #{orgCategory},
+            </if>
+            <if test="orgType != null" >
+              `org_type` = #{orgType},
+            </if>
+            <if test="orgCode != null" >
+              `org_code` = #{orgCode},
+            </if>
+            <if test="mobile != null" >
+              `mobile` = #{mobile},
+            </if>
+            <if test="fax != null" >
+              `fax` = #{fax},
+            </if>
+            <if test="address != null" >
+              `address` = #{address},
+            </if>
+            <if test="memo != null" >
+              `memo` = #{memo},
+            </if>
+            `status` = #{status},
+            `del_flag` = #{delFlag},
+            <if test="createBy != null" >
+              `create_by` = #{createBy},
+            </if>
+            <if test="updateBy != null" >
+              `update_by` = #{updateBy},
+            </if>
+            `update_time` = NOW(),
+        </set>
+        WHERE
+          `id` = #{id}
+    </update>
+
+    <select id="getById" resultMap="BaseResult">
+        SELECT
+          id, <include refid="BaseColumn" />
+        FROM
+          <include refid="TableName"/>
+        WHERE
+          `id` = #{id}
+    </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+          <include refid="TableName"/>
+        WHERE
+          `id` = #{id}
+    </delete>
+</mapper>

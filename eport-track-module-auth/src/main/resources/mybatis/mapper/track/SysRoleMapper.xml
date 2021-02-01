@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njeport.track.auth.dao.mapper.track.SysRoleMapper" >
+    <resultMap id="BaseResult" type="com.njeport.track.auth.dao.meta.track.SysRoleDO" >
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="role_code" property="roleCode" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="TableName">
+        sys_role
+    </sql>
+
+    <sql id="BaseColumn" >
+        `role_name`,
+        `role_code`,
+        `description`,
+        `create_by`,
+        `create_time`,
+        `update_by`,
+        `update_time`
+    </sql>
+
+    <sql id="queryByCondition">
+        <if test="params.roleCode!=null and params.roleCode!=''">
+            and role_code=#{params.roleCode}
+        </if>
+        <if test="params.roleName!=null and params.roleName!=''">
+            and role_name like CONCAT('%', #{params.roleName},'%')
+        </if>
+    </sql>
+
+    <select id="getRoleList" resultMap="BaseResult">
+        select * from
+        <include refid="TableName"/>
+        where
+        1=1
+        <include refid="queryByCondition" />
+        <if test="params.column != null">
+            order by ${params.column}
+        </if>
+        <if test="params.order != null">
+            ${params.order}
+        </if>
+        <if test="limit != -1">
+            limit #{limit} offset #{offset}
+        </if>
+    </select>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(*) from
+        <include refid="TableName"/>
+        where
+        1=1
+        <include refid="queryByCondition" />
+    </select>
+
+    <select id="countByIds" resultType="java.lang.Integer">
+        select count(*) from
+        <include refid="TableName"/>
+        where id in
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="false">
+        INSERT INTO
+          <include refid="TableName" /> (id, <include refid="BaseColumn" />)
+        VALUES(
+          #{id,jdbcType=VARCHAR},
+          #{roleName,jdbcType=VARCHAR},
+          #{roleCode,jdbcType=VARCHAR},
+          #{description,jdbcType=VARCHAR},
+          #{createBy,jdbcType=VARCHAR},
+          NOW(),
+          #{updateBy,jdbcType=VARCHAR},
+          NOW()
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE
+          <include refid="TableName"/>
+        <set>
+            <if test="roleName != null" >
+              `role_name` = #{roleName},
+            </if>
+            <if test="roleCode != null" >
+              `role_code` = #{roleCode},
+            </if>
+            <if test="description != null" >
+              `description` = #{description},
+            </if>
+            <if test="createBy != null" >
+              `create_by` = #{createBy},
+            </if>
+            <if test="updateBy != null" >
+              `update_by` = #{updateBy},
+            </if>
+            `update_time` = NOW(),
+        </set>
+        WHERE
+          `id` = #{id}
+    </update>
+
+    <select id="getById" resultMap="BaseResult">
+        SELECT
+          id, <include refid="BaseColumn" />
+        FROM
+          <include refid="TableName"/>
+        WHERE
+          `id` = #{id}
+    </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+          <include refid="TableName"/>
+        WHERE
+          `id` = #{id}
+    </delete>
+
+    <delete id="deleteByIds">
+        DELETE
+        FROM
+            <include refid="TableName"/>
+        where id in
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

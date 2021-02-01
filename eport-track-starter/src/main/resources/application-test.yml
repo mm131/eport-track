@@ -1,0 +1,48 @@
+server:
+  port: 8085
+
+spring:
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  datasource:
+    track:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://rm-bp18k84t5m7y12dl0125010cm.mysql.rds.aliyuncs.com:3306/eport-track?autoReconnect=true&allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+      username: lmm
+      password: Lmm951221
+    properties:
+      initial-size: 5
+      max-active: 10
+      min-idle: 5
+      max-wait: 60000
+      time-between-eviction-runs-millis: 3000
+      min-evictable-idle-time-millis: 300000
+      validation-query:
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+  redis:
+    host: 47.114.2.211
+    port: 6379
+    password: ''
+    timeout: 30000
+    expire: 1200
+
+shiro:
+  auth-expire: 200000
+  token-expire: 3600000
+  token-expire2: 36000000
+
+upload:
+  path: D:/upload
+
+logging:
+  level:
+    com:
+      njeport:
+        track:
+          auth:
+            dao:
+              mapper:
+                track: debug
+

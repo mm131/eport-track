@@ -1,0 +1,60 @@
+server:
+  port: 8085
+
+spring:
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  datasource:
+    track: # 货运追踪
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost/eport-track?autoReconnect=true&allowMultiQueries=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=false
+      username: root
+      password: km2411
+    customs:
+      driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+      url: jdbc:sqlserver://192.168.110.240:1433;databasename=Customs
+      username: sa
+      password: njeport@123
+    properties:
+      initial-size: 5
+      max-active: 10
+      min-idle: 5
+      max-wait: 60000
+      time-between-eviction-runs-millis: 3000
+      min-evictable-idle-time-millis: 300000
+      validation-query:
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+  redis:
+    host: 192.168.200.14
+    port: 6777
+    password: 'qwer4321'
+    timeout: 300
+    expire: 120
+
+shiro:
+  auth-expire: 200000
+  token-expire: 3600000
+
+upload:
+  path: E:/upload
+
+xxl:
+  job:
+    admin:
+      addresses: http://localhost:7202
+    executor:
+      appname: ${spring.application.name}
+      ip:
+      port: 9999
+      logpath: logs/xxl-job
+      logretentiondays: -1
+      accessToken:
+
+#FTP
+ftp:
+  transport:
+    hostname: psedi.easipass.com
+    username: CNNKGWD
+    password: 8wD9DiYp

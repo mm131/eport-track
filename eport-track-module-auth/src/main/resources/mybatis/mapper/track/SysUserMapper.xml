@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njeport.track.auth.dao.mapper.track.SysUserMapper" >
+    <resultMap id="BaseResult" type="com.njeport.track.auth.dao.meta.track.SysUserDO" >
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="realname" property="realname" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="salt" property="salt" jdbcType="VARCHAR"/>
+        <result column="avatar" property="avatar" jdbcType="VARCHAR"/>
+        <result column="birthday" property="birthday" jdbcType="TIMESTAMP"/>
+        <result column="sex" property="sex" jdbcType="INTEGER"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="org_code" property="orgCode" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="del_flag" property="delFlag" jdbcType="INTEGER"/>
+        <result column="work_no" property="workNo" jdbcType="VARCHAR"/>
+        <result column="post" property="post" jdbcType="VARCHAR"/>
+        <result column="telephone" property="telephone" jdbcType="VARCHAR"/>
+        <result column="create_by" property="createBy" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_by" property="updateBy" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="TableName">
+        sys_user
+    </sql>
+
+    <sql id="BaseColumn" >
+        `username`,
+        `realname`,
+        `password`,
+        `salt`,
+        `avatar`,
+        `birthday`,
+        `sex`,
+        `email`,
+        `phone`,
+        `org_code`,
+        `status`,
+        `del_flag`,
+        `work_no`,
+        `post`,
+        `telephone`,
+        `create_by`,
+        `create_time`,
+        `update_by`,
+        `update_time`
+    </sql>
+
+    <sql id="queryByCondition">
+        <if test="params.username!=null and params.username!=''">
+            and username like CONCAT('%', #{params.username},'%')
+        </if>
+        <if test="params.sex!=null">
+            and sex=#{params.sex}
+        </if>
+        <if test="params.email!=null and params.email!=''">
+            and email=#{params.email}
+        </if>
+        <if test="params.phone!=null and params.phone!=''">
+            and phone=#{params.phone}
+        </if>
+        <if test="params.status!=null">
+            and `status`=#{params.status}
+        </if>
+    </sql>
+
+    <select id="getByUsername" resultMap="BaseResult">
+        select id, <include refid="BaseColumn" />
+        from <include refid="TableName"/>
+        where username=#{username}
+    </select>
+
+    <select id="getRolesByUserId" resultType="java.lang.String">
+        SELECT
+            r.id
+        FROM
+            sys_user_role ur
+                LEFT JOIN sys_role r ON ur.role_id = r.id
+                LEFT JOIN sys_user u ON ur.user_id = u.id
+        WHERE
+            u.id = #{userId}
+          AND u.del_flag = 0
+          AND u.status = 1
+    </select>
+
+    <select id="getRolesByUsername" resultType="java.lang.String">
+        SELECT
+            r.role_code
+        FROM
+            sys_user_role ur
+                LEFT JOIN sys_role r ON ur.role_id = r.id
+                LEFT JOIN sys_user u ON ur.user_id = u.id
+        WHERE
+            u.username = #{username}
+          AND u.del_flag = 0
+          AND u.status = 1
+    </select>
+
+    <select id="getUserList" resultMap="BaseResult">
+        select
+            id, <include refid="BaseColumn" />
+        from
+        <include refid="TableName"/>
+        where
+        1=1
+        <include refid="queryByCondition" />
+        <if test="params.column != null">
+            order by ${params.column}
+        </if>
+        <if test="params.order != null">
+            ${params.order}
+        </if>
+        <if test="limit != -1">
+            limit #{limit} offset #{offset}
+        </if>
+    </select>
+
+    <select id="countAll" resultType="java.lang.Integer">
+        select count(*) from
+        <include refid="TableName"/>
+        where
+        1=1
+        <include refid="queryByCondition" />
+    </select>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="false">
+        INSERT INTO
+          <include refid="TableName" /> (id, <include refid="BaseColumn" />)
+        VALUES(
+          #{id,jdbcType=VARCHAR},
+          #{username,jdbcType=VARCHAR},
+          #{realname,jdbcType=VARCHAR},
+          #{password,jdbcType=VARCHAR},
+          #{salt,jdbcType=VARCHAR},
+          #{avatar,jdbcType=VARCHAR},
+          #{birthday,jdbcType=TIMESTAMP},
+          #{sex,jdbcType=INTEGER},
+          #{email,jdbcType=VARCHAR},
+          #{phone,jdbcType=VARCHAR},
+          #{orgCode,jdbcType=VARCHAR},
+          #{status,jdbcType=INTEGER},
+          #{delFlag,jdbcType=INTEGER},
+          #{workNo,jdbcType=VARCHAR},
+          #{post,jdbcType=VARCHAR},
+          #{telephone,jdbcType=VARCHAR},
+          #{createBy,jdbcType=VARCHAR},
+          NOW(),
+          #{updateBy,jdbcType=VARCHAR},
+          NOW()
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE
+          <include refid="TableName"/>
+        <set>
+            <if test="username != null" >
+              `username` = #{username},
+            </if>
+            <if test="realname != null" >
+              `realname` = #{realname},
+            </if>
+            <if test="password != null" >
+              `password` = #{password},
+            </if>
+            <if test="salt != null" >
+              `salt` = #{salt},
+            </if>
+            <if test="avatar != null" >
+              `avatar` = #{avatar},
+            </if>
+            <if test="birthday != null" >
+                `birthday` = #{birthday},
+            </if>
+            <if test="sex != null" >
+                `sex` = #{sex},
+            </if>
+            <if test="email != null" >
+              `email` = #{email},
+            </if>
+            <if test="phone != null" >
+              `phone` = #{phone},
+            </if>
+            <if test="orgCode != null and orgCode != ''" >
+              `org_code` = #{orgCode},
+            </if>
+            <if test="status != null" >
+                `status` = #{status},
+            </if>
+            <if test="delFlag != null" >
+                `del_flag` = #{delFlag},
+            </if>
+            <if test="workNo != null" >
+              `work_no` = #{workNo},
+            </if>
+            <if test="post != null" >
+              `post` = #{post},
+            </if>
+            <if test="telephone != null" >
+              `telephone` = #{telephone},
+            </if>
+            <if test="createBy != null" >
+              `create_by` = #{createBy},
+            </if>
+            <if test="updateBy != null" >
+              `update_by` = #{updateBy},
+            </if>
+            `update_time` = NOW(),
+        </set>
+        WHERE
+          `id` = #{id}
+    </update>
+
+    <select id="getById" resultMap="BaseResult">
+        SELECT
+          id, <include refid="BaseColumn" />
+        FROM
+          <include refid="TableName"/>
+        WHERE
+          `id` = #{id}
+    </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+          <include refid="TableName"/>
+        WHERE
+          `id` = #{id}
+    </delete>
+
+
+    <select id="queryUsersAll" resultMap="BaseResult">
+        select * from
+        <include refid="TableName"/>
+    </select>
+</mapper>

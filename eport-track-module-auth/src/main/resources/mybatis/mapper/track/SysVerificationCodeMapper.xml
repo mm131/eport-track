@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.njeport.track.auth.dao.mapper.track.SysVerificationCodeMapper" >
+    <resultMap id="BaseResult" type="com.njeport.track.auth.dao.meta.track.SysVerificationCodeDO" >
+        <result column="id" property="id" jdbcType="VARCHAR"/>
+        <result column="code" property="code" jdbcType="VARCHAR"/>
+        <result column="business_id" property="businessId" jdbcType="TINYINT"/>
+        <result column="type" property="type" jdbcType="TINYINT"/>
+        <result column="expire_time" property="expireTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="TableName">
+        sys_verification_code
+    </sql>
+
+    <sql id="BaseColumn" >
+        `code`,
+        `business_id`,
+        `type`,
+        `expire_time`
+    </sql>
+
+    <insert id="insert" keyProperty="id" useGeneratedKeys="false">
+        INSERT INTO
+          <include refid="TableName" /> (id, <include refid="BaseColumn" />)
+        VALUES(
+          #{id,jdbcType=VARCHAR},
+          #{code,jdbcType=VARCHAR},
+          #{businessId,jdbcType=TINYINT},
+          #{type,jdbcType=TINYINT},
+          #{expireTime,jdbcType=TIMESTAMP}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE
+          <include refid="TableName"/>
+        <set>
+            <if test="code != null" >
+              `code` = #{code},
+            </if>
+            <if test="businessId != null" >
+              `business_id` = #{businessId},
+            </if>
+            <if test="type != null" >
+              `type` = #{type},
+            </if>
+            `expire_time` = #{expireTime},
+        </set>
+        WHERE
+          `id` = #{id}
+    </update>
+
+    <select id="getById" resultMap="BaseResult">
+        SELECT
+          id, <include refid="BaseColumn" />
+        FROM
+          <include refid="TableName"/>
+        WHERE
+          `id` = #{id}
+    </select>
+
+    <delete id="deleteById">
+        DELETE
+        FROM
+          <include refid="TableName"/>
+        WHERE
+          `id` = #{id}
+    </delete>
+</mapper>
